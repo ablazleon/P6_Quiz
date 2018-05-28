@@ -16,6 +16,9 @@ exports.load = (req, res, next, quizId) => {
                         model: models.user, as: 'author'
                     }
                 ]
+            },
+            {
+                model: models.user, as: 'author'
             }
         ]
     })
