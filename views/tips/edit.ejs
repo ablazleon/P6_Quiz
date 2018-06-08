@@ -2,7 +2,7 @@
     Edit tip:
 </h1>
 
-<form method="PUT" action="/quizzes/<%= quiz.id %>/tips/<%=tip.id %> ?_method=PUT" >
+<form method="post" action="/quizzes/<%= tip.quiz.id %>/tips/<%=tip.id %> ?_method=PUT" >
     <% include _form.ejs %>
 </form>
 
@@ -13,7 +13,7 @@
 
 <!--  sólo quiere una cajita -->
 
-<br/>
+<input type="submit" value="Save">
+
 <a href="/goback"><button type="button">Cancel</button></a>
 
-<input type="submit" value="Save">

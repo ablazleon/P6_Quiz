@@ -96,7 +96,7 @@ exports.edit = (req, res, next) => {
     // const tip = req.tip;
     // const quiz = req.quiz;
 
-    res.render('quizzes/edit', {tip, quiz});
+    res.render('tips/edit', {tip, quiz});
 };
 
 
@@ -115,7 +115,7 @@ exports.update = (req, res, next) => {
         .catch(Sequelize.ValidationError, error => {
             req.flash('error', 'There are errors in the form:');
             error.errors.forEach(({message}) => req.flash('error', message));
-            res.render('tips/edit', {quiz});
+            res.render('tips/edit', {quiz, tip});
         })
         .catch(error => {
             req.flash('error', 'Error editing the Tip: ' + error.message);
