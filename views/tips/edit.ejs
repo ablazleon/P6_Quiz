@@ -2,18 +2,16 @@
     Edit tip:
 </h1>
 
-<form method="post" action="/quizzes/<%= tip.quiz.id %>/tips/<%=tip.id %> ?_method=PUT" >
-    <% include _form.ejs %>
+<form method="post" action="/quizzes/<%= quiz.id %>/tips/<%=tip.id %>?_method=PUT" >
+
+    <div class="wideRow">
+        <label for="text"  class="itemNarrow">Tip to be edited:</label>
+        <input type="text" class="itemWide" id="tip" name="text" value="<%= tip.text %>" placeholder="Tip to be edited" autocomplete="off"/>
+    </div>
+
+    <input type="submit" value="Add">
+
 </form>
 
-<div class="wideRow">
-    <label for="text"  class="itemNarrow">Tip to be edited:</label>
-    <input type="text" class="itemWide" id="text" name="text" value="<%= quiz.text %>" placeholder="Tip to be edited" autocomplete="off"/>
-</div>
-
-<!--  sólo quiere una cajita -->
-
-<input type="submit" value="Save">
-
 <a href="/goback"><button type="button">Cancel</button></a>
-
+<!--  ese "tip="id"" es correcto? -->

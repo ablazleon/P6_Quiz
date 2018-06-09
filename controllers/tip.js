@@ -92,25 +92,29 @@ exports.adminOrAuthorRequired = (req, res, next) => {
 // GET /quizzes/:quizId/tips/:tipId/edit
 exports.edit = (req, res, next) => {
 
-    const {tip, quiz} = req;
+    const {quiz, tip} = req;
     // const tip = req.tip;
     // const quiz = req.quiz;
 
-    res.render('tips/edit', {tip, quiz});
+    res.render('tips/edit', {quiz, tip});
 };
 
 
 // PUT /quizzes/:quizId/tips/:tipId
 exports.update = (req, res, next) => {
 
-    const tip = req;
+    const {quiz, tip} = req; // Se cogen estos valores de la petición "req"
 
-    quiz.tip = body.tip;
+    tip.text = req.body.text; // Como la acción del formulario es post, el servidor
+    // recibe el texto del tip en el body.
+    tip.accepted = false; // Así, se edita la pista el enunciado pide que la pista vuelva
+    // al estado "NO MODERADA".
 
-    quiz.save({fields: ["question", "answer"]})
-        .then(quiz => {
+    tip.save({fields: ["text", "accepted"]})
+        .then(tip => {
             req.flash('success', 'Tip edited successfully.');
-            res.redirect('/quizzes/' + quiz.id + '/tips/' + tip.id);
+            // res.redirect('/quizzes/' + quiz.id + '/tips/' + tip.id);
+            res.redirect('/quizzes/' + req.params.quizId);
         })
         .catch(Sequelize.ValidationError, error => {
             req.flash('error', 'There are errors in the form:');
