@@ -137,15 +137,15 @@ router.delete('/quizzes/:quizId(\\d+)/tips/:tipId(\\d+)',
     quizController.adminOrAuthorRequired,
     tipController.destroy);
 
-router.get('/quizzes:quizId(\\d+)/tips/:tipId(\\d+)/edit',
+router.get('/quizzes/:quizId(\\d+)/tips/:tipId(\\d+)/edit',
 	sessionController.loginRequired,
 	tipController.adminOrAuthorRequired,
 	tipController.edit);
 
-router.put('/quizzes:quizId(\\d+)/tips/:tipId(\\d+)',
+router.put('/quizzes/:quizId(\\d+)/tips/:tipId(\\d+)',
 	sessionController.loginRequired,
 	tipController.adminOrAuthorRequired,
-    tipController.edit);
+    tipController.update); // Para actualizar la BBDD
 
 
 
