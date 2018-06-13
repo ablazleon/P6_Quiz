@@ -1,6 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
+const multer  = require('multer');
+const upload = multer({ dest: './uploads/' });
+
+
 const quizController = require('../controllers/quiz');
 const tipController = require('../controllers/tip');
 const userController = require('../controllers/user');
@@ -95,27 +99,30 @@ router.get('/users/:userId(\\d+)/quizzes',
 
 // Routes for the resource /quizzes
 router.get('/quizzes',
-	quizController.index);
+    quizController.index);
 router.get('/quizzes/:quizId(\\d+)',
-	quizController.show);
+    quizController.show);
 router.get('/quizzes/new',
     sessionController.loginRequired,
-	quizController.new);
+    quizController.new);
 router.post('/quizzes',
     sessionController.loginRequired,
-	quizController.create);
+    upload.single('image'),
+    quizController.create);
 router.get('/quizzes/:quizId(\\d+)/edit',
     sessionController.loginRequired,
     quizController.adminOrAuthorRequired,
-	quizController.edit);
+    quizController.edit);
 router.put('/quizzes/:quizId(\\d+)',
     sessionController.loginRequired,
     quizController.adminOrAuthorRequired,
-	quizController.update);
+    upload.single('image'),
+    quizController.update);
 router.delete('/quizzes/:quizId(\\d+)',
     sessionController.loginRequired,
     quizController.adminOrAuthorRequired,
-	quizController.destroy);
+    quizController.destroy);
+
 
 router.get('/quizzes/:quizId(\\d+)/play',  quizController.play);
 router.get('/quizzes/:quizId(\\d+)/check', quizController.check);
