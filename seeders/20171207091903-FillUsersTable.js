@@ -15,6 +15,12 @@ module.exports = {
                 createdAt: new Date(), updatedAt: new Date()
             },
             {
+                username: 'Adrian',
+                password: crypt.encryptPassword('5678', 'bbbb'),
+                salt: 'bbbb',
+                createdAt: new Date(), updatedAt: new Date()
+            },
+            {
                 username: 'pepe',
                 password: crypt.encryptPassword('5678', 'bbbb'),
                 salt: 'bbbb',

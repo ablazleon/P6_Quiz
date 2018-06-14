@@ -96,7 +96,9 @@ router.get('/users/:userId(\\d+)/quizzes',
     quizController.index);
 
 
-// Routes for the resource /quizzes
+/*
+ Routes for the resource /quizzes
+  */
 router.get('/quizzes',
 	quizController.index);
 router.get('/quizzes/:quizId(\\d+)',
@@ -106,7 +108,7 @@ router.get('/quizzes/new',
 	quizController.new);
 router.post('/quizzes',
     sessionController.loginRequired,
-    upload.single('image'),
+    upload.single('image'), // Extract the image of quizzes.
 	quizController.create);
 router.get('/quizzes/:quizId(\\d+)/edit',
     sessionController.loginRequired,
@@ -115,7 +117,7 @@ router.get('/quizzes/:quizId(\\d+)/edit',
 router.put('/quizzes/:quizId(\\d+)',
     sessionController.loginRequired,
     quizController.adminOrAuthorRequired,
-    upload.single('image'),
+    upload.single('image'), // Extract the image on every quiz.
 	quizController.update);
 router.delete('/quizzes/:quizId(\\d+)',
     sessionController.loginRequired,
