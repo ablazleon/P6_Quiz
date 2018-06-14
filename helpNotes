@@ -1,0 +1,23 @@
+Problem with updating node?
+
+nvm ls 
+
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+
+Problem with installing sqlite3 manually?
+
+  Install and unsitall it.
+
+npm uninstall sqlite3
+npm install --save sqlite3 -dev
+
+npm install
+
+-----------------
+
+npm uninstall sqlite3
+npm rebuild
+npm install sqlite3 --build-from-source
+npm install --save-dev sqlite3
+npm install -g node-gyp
+
