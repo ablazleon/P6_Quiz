@@ -1,0 +1,19 @@
+<ul>
+    <% for (var i in tips) { %>
+    <% var tip = tips[i]; %>
+
+    <% var accepted = tip.accepted; %>
+    <% var isAdmin = session.user && session.user.isAdmin; %>
+    <% var isTipAuthor = session.user && tip.authorId && tip.authorId === session.user.id; %>
+
+    <% if (accepted || isAdmin || isTipAuthor) { %>
+
+    <li>
+        <%= tip.text %>
+
+        <small> (by <%= tip.author ? tip.author.username: "Anonymus" %>) </small>
+
+    </li>
+    <% } %>
+    <% } %>
+</ul>

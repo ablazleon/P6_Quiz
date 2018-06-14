@@ -17,5 +17,12 @@
         <input type="text" class="itemWide" id="answer" name="answer" value="" placeholder="Answer" autocomplete="off"/>
         <input type="submit" class="itemNarrow" id="send" value="Check">
     </div>
+
+    <% var tips = quiz.tips; %>
+    <% var quizId = quiz.id; %>
+    <% var quizAuthorId = quiz.authorId; %>
+
+    <% include ../tips/show %>
+
 </form>
 
