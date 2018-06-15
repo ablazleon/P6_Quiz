@@ -71,6 +71,7 @@ exports.index = (req, res, next) => {
     };
 
     let title = "Questions";
+    let yourquestions = "";
 
     // Search:
     const search = req.query.search || '';
@@ -113,11 +114,15 @@ exports.index = (req, res, next) => {
         return models.quiz.findAll(findOptions);
     })
     .then(quizzes => {
+        if(req.user) { // If my quizzes
+            yourquestions = "You have " + quizzes.length + " quiz(zes)."
+        }
         res.render('quizzes/index.ejs', {
             quizzes,
             search,
             cloudinary,
-            title
+            title,
+            yourquestions
         });
     })
     .catch(error => next(error));

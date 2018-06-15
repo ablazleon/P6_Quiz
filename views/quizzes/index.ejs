@@ -23,6 +23,14 @@
     <%= title || "Questions" %>:
 </h1>
 
+<p> We have
+    <b> <%= quizzes.length %> </b> quizzes.
+</p>
+
+<p>
+    <b> <%= yourquestions || "" %> </b>
+</p>
+
 <table id="quizzesIndex">
     <% for (var i in quizzes) { %>
     <% var quiz = quizzes[i]; %>
