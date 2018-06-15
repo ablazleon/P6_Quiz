@@ -93,7 +93,7 @@ exports.index = (req, res, next) => {
 
     // Filter: my favourite quizzes.
     if(req.session.user){
-        if(seachfavourites){
+        if(searchfavourites){
             countOptions.include({
                 model: models.user,
                 as: "fans",
@@ -111,7 +111,7 @@ exports.index = (req, res, next) => {
             // query fails when there are several fans of the same quiz.
 
             countOptions.include.push({
-                model: model.user,
+                model: models.user,
                 as: "fans",
                 attributes: ['id']
             });
