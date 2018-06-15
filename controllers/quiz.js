@@ -22,6 +22,8 @@ exports.load = (req, res, next, quizId) => {
         include: [
             {
                 model: models.attachment,
+            },
+            {
                 model: models.tip,
                 include: [
                     {
