@@ -21,7 +21,7 @@ exports.load = (req, res, next, quizId) => {
     models.quiz.findById(quizId, {
         include: [
             {
-                model: models.attachment,
+                model: models.attachment
             },
             {
                 model: models.tip,
