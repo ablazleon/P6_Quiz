@@ -66,6 +66,7 @@ app.use(session({
     saveUninitialized: true
 }));
 
+
 app.use(methodOverride('_method', {methods: ["POST", "GET"]}));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(partials());
@@ -76,6 +77,9 @@ app.use(function(req, res, next) {
 
     // To use req.session in the views
     res.locals.session = req.session;
+
+    // To use req.url in the views
+    res.locals.url = req.url;
 
     next();
 });

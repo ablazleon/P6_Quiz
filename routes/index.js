@@ -8,6 +8,7 @@ const quizController = require('../controllers/quiz');
 const tipController = require('../controllers/tip');
 const userController = require('../controllers/user');
 const sessionController = require('../controllers/session');
+const favouriteController = require('../controllers/favourite');
 
 //-----------------------------------------------------------
 
@@ -154,6 +155,17 @@ router.put('/quizzes/:quizId(\\d+)/tips/:tipId(\\d+)',
 	tipController.adminOrAuthorRequired,
     tipController.update); // Para actualizar la BBDD
 
+// Routes for the resource favourites of a user
+
+router.put('/users/:userId(\\d+)/favourites/:quizId(\\d+)',
+	sessionController.loginRequired,
+	sessionController.adminOrMyselfRequired,
+	favouriteController.add	);
+
+router.delete('/users/:userId(\\d+)/favourites/.quizId(\\d+)',
+	sessionController.loginRequired,
+	sessionController.adminOrMyselfRequired,
+	favouriteController.del);
 
 
 module.exports = router;

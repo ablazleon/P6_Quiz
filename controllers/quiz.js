@@ -392,10 +392,42 @@ exports.randomplay = (req, res, next) => {
         .then(function (quizzes) {
 
             if(quizzes[0]) {
-                res.render('quizzes/random_play', { //Index random cehck tal
-                    quiz: quizzes[0],
-                    score: req.session.randomPlay.length
+
+                // As it is desired render not only the quiz but the info about tips and
+                // author, it is include this values in the find.
+
+                models.quiz.findById(quizzes[0].id, {
+                    include: [
+                        {
+                            model: models.attachment
+                        },
+                        {
+                            model: models.tip,
+                            include: [
+                                {
+                                    model: models.user, as: 'author'
+                                }
+                            ]
+                        },
+                        {
+                            model: models.user, as: 'author'
+                        }
+                    ]
                 })
+                .then(quiz => {
+                    if (quiz) {
+                        req.quiz = quiz;
+                        res.render('quizzes/random_play', {
+                            quiz,
+                            score: req.session.randomPlay.length
+                        })
+                    } else {
+                        throw new Error('There is no quiz with id =' + quizId);
+                    }
+                })
+                 .catch(error => next(error));
+
+
             } else{
                 req.session.randomPlay = [];
                 res.render('quizzes/random_nomore', { //Index random cehck tal
