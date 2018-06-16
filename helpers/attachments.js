@@ -1,5 +1,6 @@
 const cloudinary = require('cloudinary');
 const fs = require('fs');
+// const CLOUDINARY_URL = "cloudinary://533254263299739:IC6N17FRKHcpYwhJ1AzMyrt9eQg@ablazleon";
 
 /**
 * Create a promise to upload a new file to Cloudinary.
@@ -38,6 +39,7 @@ exports.checksCloudinaryEnv = () => {
 
     return new Promise((resolve, reject) => {
         if (!!process.env.CLOUDINARY_URL) {
+        //if (CLOUDINARY_URL) {
             resolve();
         } else {
             reject(new Error("Environment variable CLOUDINARY_URL is not defined."));

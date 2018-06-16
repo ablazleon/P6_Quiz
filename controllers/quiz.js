@@ -72,6 +72,9 @@ exports.index = (req, res, next) => {
 
     let title = "Questions";
     let yourquestions = "";
+    let totalQuizzes = [];
+
+    let NTotalQ = 0;
 
     // Search:
     const search = req.query.search || '';
@@ -87,46 +90,59 @@ exports.index = (req, res, next) => {
         title = "Questions of " + req.user.username;
     }
 
-    models.quiz.count(countOptions)
-    .then(count => {
+    models.quiz.count()
+        .then((c) => {
+            NTotalQ = c;
+        })
+        .then(() => {
+            models.quiz.count(countOptions)
+        })
+        .then(count => {
 
-        // Pagination:
+            // Pagination:
 
-        const items_per_page = 10;
+            const items_per_page = 10;
 
-        // The page to show is given in the query
-        const pageno = parseInt(req.query.pageno) || 1;
+            // The page to show is given in the query
+            const pageno = parseInt(req.query.pageno) || 1;
 
-        // Create a String with the HTMl used to render the pagination buttons.
-        // This String is added to a local variable of res, which is used into the application layout file.
-        res.locals.paginate_control = paginate(count, items_per_page, pageno, req.url);
+            // Create a String with the HTMl used to render the pagination buttons.
+            // This String is added to a local variable of res, which is used into the application layout file.
+            res.locals.paginate_control = paginate(count, items_per_page, pageno, req.url);
 
-        const findOptions = {
-            ...countOptions,
-            offset: items_per_page * (pageno - 1),
-            limit: items_per_page,
-            include: [
-                models.attachment,
-                {model: models.user, as: 'author'}
-            ]
-        };
+            // Se hallan todos lo quizzes.
 
-        return models.quiz.findAll(findOptions);
-    })
-    .then(quizzes => {
-        if(req.user) { // If my quizzes
-            yourquestions = "You have " + quizzes.length + " quiz(zes)."
-        }
-        res.render('quizzes/index.ejs', {
-            quizzes,
-            search,
-            cloudinary,
-            title,
-            yourquestions
-        });
-    })
-    .catch(error => next(error));
-};
+
+            const findOptions = {
+                ...countOptions,
+                offset: items_per_page * (pageno - 1),
+                limit: items_per_page,
+                include: [
+                    models.attachment,
+                    {model: models.user, as: 'author'}
+                ]
+            };
+
+            return models.quiz.findAll(findOptions);
+            })
+
+        .then((quizzes) => {
+
+            if(req.user) { // If my quizzes
+                yourquestions = "You have " + quizzes.length + " quiz(zes)."
+            }
+
+            res.render('quizzes/index.ejs', {
+                quizzes,
+                NTotalQ,
+                search,
+                cloudinary,
+                title,
+                yourquestions
+            });
+        })
+        .catch(error => next(error));
+    };
 
 
 // GET /quizzes/:quizId
