@@ -18,7 +18,7 @@ const cloudinary_upload_options = {
 // Autoload the quiz with id equals to :quizId
 exports.load = (req, res, next, quizId) => {
 
-    models.quiz.findById(quizId, {
+    const options = {
         include: [
             {
                 model: models.attachment
@@ -35,7 +35,19 @@ exports.load = (req, res, next, quizId) => {
                 model: models.user, as: 'author'
             }
         ]
-    })
+    };
+
+    // For logged users: include the favourites of the questions
+    // by filtering by the logged user in the outer join.
+    if ( req.session.user ){
+        options.include.push({
+            model: models.user,
+            as: "fans",
+            where: { id: req.session.user.id },
+            required: false // OUTER JOIN
+        })
+    }
+    models.quiz.findById(quizId, options)
     .then(quiz => {
         if (quiz) {
             req.quiz = quiz;
@@ -67,12 +79,14 @@ exports.adminOrAuthorRequired = (req, res, next) => {
 exports.index = (req, res, next) => {
 
     let countOptions = {
-        where: {}
+        where: {},
+        include: []
     };
 
+    const searchfavourites = req.query.searchfavourites || "";
     let title = "Questions";
     let yourquestions = "";
-    let totalQuizzes = [];
+
 
     let NTotalQ = 0;
 
