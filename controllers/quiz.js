@@ -101,7 +101,39 @@ exports.index = (req, res, next) => {
     // If there exists "req.user", then only the quizzes of that user are shown
     if (req.user) {
         countOptions.where.authorId = req.user.id;
-        title = "Questions of " + req.user.username;
+        if ( req.sessision.user && req.session.user.id === req.user.id) {
+            title = "My Questions";
+        } else {
+            title = "Questions of " + req.user.username;
+        }
+    }
+
+    // Filter: my favourite quizzes:
+    if (req.session.user) {
+        if (searchfavourites) {
+            countOptions.include.push({
+                model: models.user,
+                as: "fans",
+                where: {id: req.session.user.id},
+                attributes: ['id']
+
+            });
+        } else {
+
+            // NOTE:
+            // It should be added the options ( or similars )
+            // to have a lighter query:
+            //    where: {id: req.session.user.id},
+            //    required: false  // OUTER JOIN
+            // but this does not work with SQLite. The generated
+            // query fails when there are several fans of the same quiz.
+
+            countOptions.include.push({
+                model: models.user,
+                as: "fans",
+                attributes: ['id']
+            });
+        }
     }
 
     models.quiz.count()
@@ -131,11 +163,17 @@ exports.index = (req, res, next) => {
                 ...countOptions,
                 offset: items_per_page * (pageno - 1),
                 limit: items_per_page,
-                include: [
-                    models.attachment,
-                    {model: models.user, as: 'author'}
-                ]
+                // include: [
+                //     models.attachment,
+                //     {model: models.user, as: 'author'}
+                //]
             };
+
+            findOptions.include.push(models.attachment);
+            findOptions.include.push({
+                model: models.user,
+                as: 'author'
+            });
 
             return models.quiz.findAll(findOptions);
             })
