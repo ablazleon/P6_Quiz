@@ -363,6 +363,35 @@ exports.check = (req, res, next) => {
     });
 };
 
+/*
+GET /quizzes/randomPlay0
+
+It is choosen how many quizzes to be played.
+
+ */
+
+exports.randomplay0 = (req, res ,next) => {
+
+    req.session.Nquizzes = 0;
+    let Nquizzes = req.session.Nquizzes;
+
+    // If there have been playing before, it is started again.
+    if (req.session.randomPlay) {
+        req.session.randomPlay = [];
+    }
+
+    models.quiz.findAll()
+        .then(quizzes => {
+            req.session.Nquizzes = quizzes.length;
+            Nquizzes = req.session.Nquizzes;
+         })
+        .then(() => {
+            res.render('quizzes/randomPlay0',{
+                Nquizzes
+            })
+        })
+        .catch(error => next(error))
+};
 
 /*
 * randomplay muestra una pregunta al azar en el formulario del view random_play
@@ -377,6 +406,19 @@ exports.check = (req, res, next) => {
 // GET /quizzes/randomplay
 exports.randomplay = (req, res, next) => {
 
+    const {query} = req;
+
+    // In each loop if its the query, you stored, if not its pick the previous value.
+
+    req.session.NquizzesPlaying = query.NquizzesPlaying || req.session.NquizzesPlaying ;
+    let NquizzesPlaying =  req.session.NquizzesPlaying ;
+
+    // It is validated the value.
+
+    if ((NquizzesPlaying <= 0) || (NquizzesPlaying > req.session.Nquizzes)){
+        res.redirect('/quizzes/randomPlay0');
+        req.flash(`error`, `You have not choosen a valid number of quizzes to play.`)
+    }
 
     // 1) Se crea un array con las ids preguntas de la BBDD.
     req.session.randomPlay = req.session.randomPlay || [];
@@ -396,7 +438,11 @@ exports.randomplay = (req, res, next) => {
         // 3) Se pasa el quiz al formulario
         .then(function (quizzes) {
 
-            if(quizzes[0]) {
+            // If the played are more than the desired, show no more.
+
+            const score = req.session.randomPlay.length;
+
+            if(quizzes[0] && (score < NquizzesPlaying) ) {
 
                 // As it is desired render not only the quiz but the info about tips and
                 // author, it is include this values in the find.
@@ -433,7 +479,7 @@ exports.randomplay = (req, res, next) => {
                  .catch(error => next(error));
 
 
-            } else{
+            } else {
                 req.session.randomPlay = [];
                 res.render('quizzes/random_nomore', { //Index random cehck tal
                     score: score0
@@ -471,10 +517,12 @@ exports.randomcheck = (req, res, next) => {
     //}
 
     const score = req.session.randomPlay.length;
-    console.log(">>>>>>>>>>", score);
     res.render('quizzes/random_result', {answer, result, score});
 
-    if (!result){
+    if (!result) {
         delete req.session.randomPlay;
     }
+ // if (!result || (req.session.randomPlay.length > req.session.NrandomPlay)) {
+ //        delete req.session.randomPlay;
+ //    }
 };

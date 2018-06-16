@@ -1,0 +1,27 @@
+<h1>
+    Random Play:
+</h1>
+
+<div>
+    If you have created quizzes. . . let's play
+</div>
+
+<form method="get" action="/quizzes/randomPlay">
+
+    <p>
+        How many quizzes you want to play?
+    </p>
+
+    <p>
+        We have <b> <%= Nquizzes %> </b> quizzes.
+    </p>
+
+
+    <div class="wideRow">
+        <input type="text" class="itemWide" id="answer" name="NquizzesPlaying" value=""
+               placeholder="Between 0 and the total number of quizzes" autocomplete="off"/>
+
+        <input type="submit" class="itemNarrow" id="send" value="Check">
+    </div>
+
+</form>
