@@ -486,7 +486,8 @@ exports.randomplay = (req, res, next) => {
                         req.quiz = quiz;
                         res.render('quizzes/random_play', {
                             quiz,
-                            score: req.session.randomPlay.length
+                            score: req.session.randomPlay.length,
+                            cloudinary
                         })
                     } else {
                         throw new Error('There is no quiz with id =' + quizId);

@@ -12,6 +12,10 @@
         Question: <b><%= quiz.question %></b>
     </p>
 
+    <td>
+        <% var attachment = quiz.attachment; %>
+        <% include ../attachments/_show %>
+    </td>
 
     <div class="wideRow">
         <input type="text" class="itemWide" id="answer" name="answer" value="" placeholder="Answer" autocomplete="off"/>
