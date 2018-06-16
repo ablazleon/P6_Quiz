@@ -382,7 +382,7 @@ exports.check = (req, res, next) => {
 /*
 GET /quizzes/randomPlay0
 
-It is choosen how many quizzes to be played.
+It is chosen how many quizzes to be played.
 
  */
 
@@ -433,7 +433,7 @@ exports.randomplay = (req, res, next) => {
 
     if ((NquizzesPlaying <= 0) || (NquizzesPlaying > req.session.Nquizzes)){
         res.redirect('/quizzes/randomPlay0');
-        req.flash(`error`, `You have not choosen a valid number of quizzes to play.`)
+        req.flash(`error`, `You have not chosen a valid number of quizzes to play.`)
     }
 
     // 1) Se crea un array con las ids preguntas de la BBDD.
