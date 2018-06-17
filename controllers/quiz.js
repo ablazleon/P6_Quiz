@@ -145,37 +145,37 @@ exports.index = (req, res, next) => {
         })
         .then(count => {
 
-            // Pagination:
+                // Pagination:
 
-            const items_per_page = 10;
+                const items_per_page = 10;
 
-            // The page to show is given in the query
-            const pageno = parseInt(req.query.pageno) || 1;
+                // The page to show is given in the query
+                const pageno = parseInt(req.query.pageno) || 1;
 
-            // Create a String with the HTMl used to render the pagination buttons.
-            // This String is added to a local variable of res, which is used into the application layout file.
-            res.locals.paginate_control = paginate(count, items_per_page, pageno, req.url);
+                // Create a String with the HTMl used to render the pagination buttons.
+                // This String is added to a local variable of res, which is used into the application layout file.
+                res.locals.paginate_control = paginate(count, items_per_page, pageno, req.url);
 
-            // Se hallan todos lo quizzes.
+                // Se hallan todos lo quizzes.
 
 
-            const findOptions = {
-                ...countOptions,
-                offset: items_per_page * (pageno - 1),
-                limit: items_per_page,
-                // include: [
-                //     models.attachment,
-                //     {model: models.user, as: 'author'}
-                //]
-            };
+                const findOptions = {
+                    ...countOptions,
+                    offset: items_per_page * (pageno - 1),
+                    limit: items_per_page,
+                    // include: [
+                    //     models.attachment,
+                    //     {model: models.user, as: 'author'}
+                    //]
+                };
 
-            findOptions.include.push(models.attachment);
-            findOptions.include.push({
-                model: models.user,
-                as: 'author'
-            });
+                findOptions.include.push(models.attachment);
+                findOptions.include.push({
+                    model: models.user,
+                    as: 'author'
+                });
 
-            return models.quiz.findAll(findOptions);
+                return models.quiz.findAll(findOptions);
             })
 
         .then((quizzes) => {
@@ -184,12 +184,22 @@ exports.index = (req, res, next) => {
                 yourquestions = "You have " + quizzes.length + " quiz(zes)."
             }
 
+            // Mark favourite quizzes:
+            if (req.session.user){
+                quizzes.forEach(quiz => {
+                    quiz.favourite = quiz.fans.some(fan => {
+                        return fan.id === req.session.user.id;
+                    });
+                });
+            }
+
             res.render('quizzes/index.ejs', {
                 quizzes,
                 NTotalQ,
                 search,
                 cloudinary,
                 title,
+                searchfavourites,
                 yourquestions
             });
         })
@@ -202,10 +212,31 @@ exports.show = (req, res, next) => {
 
     const {quiz} = req;
 
-    res.render('quizzes/show', {
-        quiz,
-        cloudinary
-    });
+    new Promise((resolve, reject) => {
+
+        // Only for logged users:
+        // if this quiz is one of my favourites, then i create the
+        // attribute "favourite = true"
+        if ( req.session.user) {
+            resolve(
+                req.quiz.getFans({where: {id: req.session.user.id}})
+                .then(fans => {
+                    if (fans.length > 0){
+                        req.quiz.favourite = true;
+                    }
+                })
+            );
+        } else {
+            resolve();
+        }
+    })
+        .then( () => {
+            res.render('quizzes/show', {
+                quiz,
+                cloudinary
+            })
+        })
+        .catch(error => next(error));
 };
 
 
@@ -408,12 +439,33 @@ exports.play = (req, res, next) => {
 
     const answer = query.answer || '';
 
-    res.render('quizzes/play', {
-        quiz,
-        answer,
-        cloudinary
-    });
-};
+    new Promise(function (resolve, reject) {
+
+        // Only for logger users:
+        //   if this quiz is one of my fovourites, then I create
+        //   the attribute "favourite = true"
+        if (req.session.user) {
+            resolve(
+                req.quiz.getFans({where: {id: req.session.user.id}})
+                    .then(fans => {
+                        if (fans.length > 0) {
+                            req.quiz.favourite = true
+                        }
+                    })
+            );
+        } else {
+            resolve();
+        }
+    })
+        .then(() => {
+            res.render('quizzes/play', {
+                quiz,
+                answer,
+                cloudinary
+            });
+        })
+        .catch(error => next(error));
+    };
 
 
 // GET /quizzes/:quizId/check
