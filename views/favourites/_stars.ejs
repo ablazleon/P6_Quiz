@@ -23,7 +23,7 @@
             var request = new XMLHttpRequest();
             var method = state ? "DELETE" : "PUT";
             var url = "/users/" + userId + "/favourites/" + quizId + "?_method=" + method;
-            request.open(POST, url);
+            request.open("POST", url);
             request.setRequestHeader("X-Requested-With", "XMLHttpRequest");
             request.onreadystatechange = function() {
                 if (request.readyState === 4 && request.status === 200) {
