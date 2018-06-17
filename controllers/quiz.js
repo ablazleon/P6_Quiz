@@ -101,7 +101,7 @@ exports.index = (req, res, next) => {
     // If there exists "req.user", then only the quizzes of that user are shown
     if (req.user) {
         countOptions.where.authorId = req.user.id;
-        if ( req.sessision.user && req.session.user.id === req.user.id) {
+        if ( req.session.user && req.session.user.id === req.user.id) {
             title = "My Questions";
         } else {
             title = "Questions of " + req.user.username;
