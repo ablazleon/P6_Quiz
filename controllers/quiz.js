@@ -85,10 +85,11 @@ exports.index = (req, res, next) => {
 
     const searchfavourites = req.query.searchfavourites || "";
     let title = "Questions";
-    let yourquestions = "";
 
+    let NTotalQ = 0;  // Total number of quizzes
+    let NmyQ = 0;     // Quizzes i have created.
 
-    let NTotalQ = 0;
+    let itsMe =  !!(req.user && req.session.user && req.session.user.id === req.user.id);
 
     // Search:
     const search = req.query.search || '';
@@ -145,6 +146,8 @@ exports.index = (req, res, next) => {
         })
         .then(count => {
 
+
+
                 // Pagination:
 
                 const items_per_page = 10;
@@ -179,11 +182,6 @@ exports.index = (req, res, next) => {
             })
 
         .then((quizzes) => {
-
-            if(req.user) { // If my quizzes
-                yourquestions = "You have " + quizzes.length + " quiz(zes)."
-            }
-
             // Mark favourite quizzes:
             if (req.session.user){
                 quizzes.forEach(quiz => {
@@ -200,7 +198,8 @@ exports.index = (req, res, next) => {
                 cloudinary,
                 title,
                 searchfavourites,
-                yourquestions
+                NmyQ,
+                itsMe
             });
         })
         .catch(error => next(error));

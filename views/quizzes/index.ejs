@@ -27,9 +27,15 @@
     <b> <%= NTotalQ %> </b> quizzes.
 </p>
 
-<p>
-    <b> <%= yourquestions || "" %> </b>
-</p>
+<% if (itsMe) { %>
+
+    <p>
+        You have <b> <%= NmyQ %> </b> quiz(zes).
+    </p>
+
+<% } %>
+
+
 
 <table id="quizzesIndex">
     <% for (var i in quizzes) { %>
